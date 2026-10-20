@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+data/trashnet/
+data/binsight/
+runs/*
+!runs/.gitkeep

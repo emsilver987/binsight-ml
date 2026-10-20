@@ -1,0 +1,67 @@
+# TrashNet baseline. Same training code as configs/binsight.yaml.
+# Swap this file for that one when the BinSight manifest exists.
+
+name: trashnet
+image_root: data/trashnet/dataset-resized
+manifest: data/manifests/trashnet.csv
+rules: ../rules.yaml
+
+image_size: 96
+batch_size: 32
+seed: 42
+val_fraction: 0.15
+test_fraction: 0.15
+
+# Head order for THIS model. These follow rules.yaml id order with the
+# four classes TrashNet cannot represent removed. Index 0 here is metal_can,
+# which is also rules.yaml id 0, but later indexes are not rules.yaml ids.
+# Metrics map by class name. Do not reorder this list after a run you want
+# to compare.
+classes:
+  - metal_can
+  - plastic_bottle_jug
+  - glass
+  - paper
+  - cardboard
+  - other_landfill
+
+# Folder name -> rules.yaml class. This is the lossy part of the baseline.
+# plastic mixes bottles, tubs, and some film; all of it is labeled
+# plastic_bottle_jug so the stream stays Recycle.
+# trash is other_landfill (Trash).
+# Nothing maps to plastic_film, food_organic, or battery_electronics,
+# so Compost and Special are unreachable.
+trashnet_label_map:
+  cardboard: cardboard
+  glass: glass
+  metal: metal_can
+  paper: paper
+  plastic: plastic_bottle_jug
+  trash: other_landfill
+
+model:
+  alpha: 0.35
+  dropout: 0.2
+  weights: imagenet
+
+train:
+  phase1_epochs: 5
+  phase1_lr: 0.001
+  phase2_epochs: 20
+  phase2_lr: 0.00001
+  unfreeze_fraction: 0.30
+  early_stopping_patience: 5
+
+# Training split only. Val/test center-crop and resize, matching the board.
+augment:
+  crop_margin: 16
+  rotation_degrees: 15
+  brightness_delta: 0.15
+  contrast_lower: 0.8
+  contrast_upper: 1.2
+  horizontal_flip: true
+
+evaluation_notes:
+  - "TrashNet covers 6 of the 10 material classes. Through rules.yaml those classes only produce Recycle and Trash, so Compost and Special have recall 0 and stream macro-F1 includes those zeros. That gap is the reason to collect BinSight images."
+  - "TrashNet's plastic folder is mapped entirely to plastic_bottle_jug (Recycle). Bottles, rigid containers, and film are folded together. The Indianapolis rules would send film and most rigid containers to Trash."
+  - "TrashNet has no item ids, so item_id is the image path and the item-level split is a stratified random image split. Similar photos of one object can land in both train and test, which flatters this baseline."

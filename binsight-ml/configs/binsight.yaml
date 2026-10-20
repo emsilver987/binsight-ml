@@ -1,0 +1,54 @@
+# BinSight training config. Same pipeline as trashnet.yaml.
+# Point manifest at data/manifests/binsight.csv with columns
+# filepath,item_id,label. label is a rules.yaml class name.
+# item_id groups every frame of one physical item so the splitter
+# keeps them in a single split.
+
+name: binsight
+image_root: data/binsight
+manifest: data/manifests/binsight.csv
+rules: ../rules.yaml
+
+image_size: 96
+batch_size: 32
+seed: 42
+val_fraction: 0.15
+test_fraction: 0.15
+
+# Full taxonomy, in rules.yaml id order. Append new classes at the end
+# after the first real training run; do not reorder.
+classes:
+  - metal_can
+  - plastic_bottle_jug
+  - other_rigid_plastic
+  - glass
+  - paper
+  - cardboard
+  - plastic_film
+  - food_organic
+  - battery_electronics
+  - other_landfill
+
+model:
+  alpha: 0.35
+  dropout: 0.2
+  weights: imagenet
+
+train:
+  phase1_epochs: 5
+  phase1_lr: 0.001
+  phase2_epochs: 20
+  phase2_lr: 0.00001
+  unfreeze_fraction: 0.30
+  early_stopping_patience: 5
+
+augment:
+  crop_margin: 16
+  rotation_degrees: 15
+  brightness_delta: 0.15
+  contrast_lower: 0.8
+  contrast_upper: 1.2
+  horizontal_flip: true
+
+evaluation_notes:
+  - "Splits are by item_id. Every frame of an item stays in one split."
