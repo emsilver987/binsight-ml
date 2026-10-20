@@ -1,0 +1,9 @@
+item_id,description,material_class,resin_code,state_notes,session_date,notes
+0001,Kirkland water bottle 16oz,plastic_bottle_jug,1,whole,2026-10-20,
+0001,Kirkland water bottle 16oz,plastic_bottle_jug,1,whole+crushed,2026-10-20
+0002, Plastic bag, plastic_film, 6, whole, 2026-10-20
+0003, Firestick TV remote, battery_electronics, 8, whole+front,2026-10-20
+0003, Firestick TV remote, battery_electronics, 8, whole+back, 2026-10-20
+0004, Lamp TV remote, battery_electronics, 8, whole+front, 2026-10-20
+0004, Lamp TV remote, battery_electronics, 8, whole+back, 2026-10-20
+

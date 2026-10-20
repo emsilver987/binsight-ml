@@ -1,0 +1,4 @@
+  form: whole, crushed, flattened, folded, torn, opened, crumbled
+  orientation: label_front, label_back, side, top, bottom, angled
+  lighting: overhead, daylight, dim, warm, backlit
+  backgound: counter, bin, cluttered

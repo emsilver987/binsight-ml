@@ -1,0 +1,194 @@
+# BinSight item -> class_id reference (label guide companion)
+# Class ids match rules.yaml. Use this when filling material_class in the manifest.
+# The CNN never sees item names — it learns the class from pixels. This file exists
+# so you label consistently. If an item isn't listed, apply the precedence rules:
+#   1. battery/circuitry          -> 8
+#   2. unrinsable food/grease     -> 9
+#   3. inseparable multi-material -> 9
+#   4. otherwise dominant material
+# Add every new decision here so the next similar item gets the same label.
+
+version: "1.0"
+assumes: "Items rinsed, empty, and dry unless noted"
+
+classes:
+  0: metal_can
+  1: plastic_bottle_jug
+  2: other_rigid_plastic
+  3: glass
+  4: paper
+  5: cardboard
+  6: plastic_film
+  7: food_organic
+  8: battery_electronics
+  9: other_landfill
+
+items:
+  # ---------------- 0: metal_can ----------------
+  soda can: 0
+  beer can: 0
+  sparkling water can: 0
+  energy drink can: 0
+  soup can: 0
+  vegetable can: 0
+  bean can: 0
+  tuna can: 0
+  pet food can: 0
+  coffee can (metal): 0
+  aluminum pie tin (clean): 0
+  metal jar lid: 0
+  aerosol can (empty): 9          # pressurized/residue risk; "when in doubt, throw it out"
+  aluminum foil (crumpled): 9     # not a can; usually food-soiled
+  paint can: 9                    # hazardous residue -> ToxDrop, but not electronics; keep out of Recycle
+
+  # ---------------- 1: plastic_bottle_jug ----------------
+  water bottle: 1
+  soda bottle: 1
+  sports drink bottle: 1
+  juice bottle (plastic): 1
+  milk jug: 1
+  orange juice jug: 1
+  laundry detergent jug: 1
+  dish soap bottle: 1
+  shampoo bottle: 1
+  conditioner bottle: 1
+  body wash bottle: 1
+  mouthwash bottle: 1
+  vinegar bottle (plastic): 1
+  ketchup bottle (squeeze): 1
+  salad dressing bottle (plastic): 1
+  cooking oil bottle (plastic): 9  # oily residue doesn't rinse out
+  pump/spray bottle: 1             # label as bottle; trigger mechanism is a known edge case
+
+  # ---------------- 2: other_rigid_plastic ----------------
+  yogurt cup: 2
+  sour cream tub: 2
+  butter tub: 2
+  cottage cheese tub: 2
+  deli container: 2
+  berry clamshell: 2
+  takeout clamshell (plastic): 2
+  plastic cup: 2
+  plastic drink lid: 2
+  plastic utensils: 2
+  bottle cap (loose): 2
+  medicine bottle (pill vial): 2
+  plastic hanger: 2
+  styrofoam cup: 2
+  styrofoam takeout box: 2
+  styrofoam egg carton: 2
+  plastic egg carton: 2
+  peanut butter jar (plastic): 2   # wide mouth = tub shape, not bottle shape
+  microwave meal tray: 2
+  plastic flower pot: 2
+
+  # ---------------- 3: glass ----------------
+  beer bottle: 3
+  wine bottle: 3
+  glass soda bottle: 3
+  pasta sauce jar: 3
+  pickle jar: 3
+  jam jar: 3
+  salsa jar: 3
+  baby food jar: 3
+  glass condiment bottle: 3
+  drinking glass: 9                # different glass type; not accepted
+  ceramic mug: 9
+  pyrex dish: 9
+
+  # ---------------- 4: paper ----------------
+  junk mail: 4
+  envelope: 4
+  envelope (window): 4
+  printer paper: 4
+  notebook paper: 4
+  newspaper: 4
+  magazine: 4
+  catalog: 4
+  receipt (thermal): 9             # coated with chemicals; not recyclable
+  paper bag (grocery): 4
+  paper towel roll tube: 5         # paperboard -> cardboard
+  used paper towel: 7              # compostable if food/water only
+  used napkin: 7
+  tissue: 9                        # hygiene; keep out of compost
+  shredded paper: 4
+
+  # ---------------- 5: cardboard ----------------
+  shipping box: 5
+  amazon box: 5
+  cereal box: 5
+  cracker box: 5
+  pasta box: 5
+  tissue box: 5
+  shoe box: 5
+  toilet paper tube: 5
+  frozen food box: 5
+  cardboard egg carton: 5
+  pizza box (clean lid): 5         # tear off the clean half; label it separately
+  pizza box (greasy): 9
+  milk carton (gable top): 9       # plastic-lined; check your source—drop-off list excludes it
+  juice box: 9                     # multilayer carton
+
+  # ---------------- 6: plastic_film ----------------
+  plastic grocery bag: 6
+  bread bag: 6
+  produce bag: 6
+  zip-top bag: 6
+  bubble wrap: 6
+  shrink wrap: 6
+  plastic mailer (poly): 6
+  plastic wrap (cling film): 6
+  candy wrapper: 6
+  cereal bag liner: 6
+  chip bag: 9                      # metallized multilayer; looks like film, inseparable
+  coffee bag (foil-lined): 9
+
+  # ---------------- 7: food_organic ----------------
+  banana peel: 7
+  apple core: 7
+  orange peel: 7
+  vegetable scraps: 7
+  eggshells: 7
+  coffee grounds: 7
+  tea bag: 7
+  bread crust: 7
+  wilted lettuce: 7
+  avocado pit: 7
+  corn cob: 7
+  meat scraps: 9                   # most home compost excludes meat/dairy
+  bones: 9
+  dairy/cheese: 9
+
+  # ---------------- 8: battery_electronics ----------------
+  AA battery: 8
+  AAA battery: 8
+  9V battery: 8
+  coin cell battery: 8
+  phone battery: 8
+  old phone: 8
+  earbuds: 8
+  charging cable: 8
+  wall charger: 8
+  remote control: 8
+  computer mouse: 8
+  light bulb (LED/CFL): 8
+  disposable vape: 8
+  light-up toy: 8
+  electric toothbrush: 8
+
+  # ---------------- 9: other_landfill ----------------
+  paper coffee cup: 9
+  paper plate (soiled): 9
+  plastic straw: 9
+  toothbrush (manual): 9
+  sponge: 9
+  dental floss: 9
+  diaper: 9
+  pet waste bag: 9
+  cotton swab: 9
+  rubber band: 9
+  broken toy (no electronics): 9
+  pen: 9
+  disposable razor: 9
+  makeup wipe: 9
+  sticker backing: 9

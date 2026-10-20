@@ -1,0 +1,105 @@
+# BinSight rules table — maps predicted material class -> disposal stream.
+# The model only predicts material. Everything below is editable without retraining.
+# If you move or the city changes its rules, edit this file and redeploy the config.
+
+version: "1.0"
+jurisdiction: "Indianapolis, IN (Marion County)"
+source: "Indy DPW Recycling Simplified + drop-off accepted list, checked 2026-10-20"
+policy: "When in doubt, throw it out"   # ambiguous items default to Trash, never Recycle
+
+# ---------------------------------------------------------------------------
+# Streams: what the bin can do. `code` is the single byte sent over UART/serial
+# to the Uno; `display` is what the MAX7219 shows.
+# ---------------------------------------------------------------------------
+streams:
+  Recycle:
+    code: "R"
+    display: "RECYCLE"
+    lid: 0            # servo/chute position index on the Uno
+  Trash:
+    code: "T"
+    display: "TRASH"
+    lid: 1
+  Compost:
+    code: "C"
+    display: "COMPOST"
+    lid: 2
+  Special:
+    code: "S"
+    display: "SPECIAL"
+    lid: null         # no bin: batteries/electronics go to ToxDrop, lids stay closed
+  Unknown:
+    code: "?"
+    display: "?"
+    lid: null         # low confidence: lids stay closed
+
+# ---------------------------------------------------------------------------
+# Material classes. Order = model output index. Do NOT reorder after training,
+# or predictions will map to the wrong class. Add new classes at the end only.
+# ---------------------------------------------------------------------------
+classes:
+  - id: 0
+    name: metal_can
+    stream: Recycle
+    notes: "Aluminum, tin, steel beverage/food cans. Rinsed."
+
+  - id: 1
+    name: plastic_bottle_jug
+    stream: Recycle
+    notes: "Narrow-neck #1/#2 bottles and jugs. Rinsed, cap on or off."
+
+  - id: 2
+    name: other_rigid_plastic
+    stream: Trash
+    notes: "Tubs, clamshells, cups, trays, Styrofoam. Not accepted at Indy drop-off."
+
+  - id: 3
+    name: glass
+    stream: Recycle
+    notes: "Bottles and jars, any color. Not drinking glasses, ceramics, or Pyrex."
+
+  - id: 4
+    name: paper
+    stream: Recycle
+    notes: "Mail, newspaper, magazines, office paper. Clean and dry."
+
+  - id: 5
+    name: cardboard
+    stream: Recycle
+    notes: "Corrugated boxes and paperboard (cereal boxes). Clean, flattened. Greasy -> other_landfill."
+
+  - id: 6
+    name: plastic_film
+    stream: Trash
+    notes: "Bags, wrappers, shrink wrap. Jams sorting machines; not accepted."
+
+  - id: 7
+    name: food_organic
+    stream: Compost
+    notes: "Food scraps, peels, coffee grounds. Compost is a household bin, not city service."
+
+  - id: 8
+    name: battery_electronics
+    stream: Special
+    notes: "Batteries, anything with circuitry. Take to ToxDrop; never trash or recycle."
+
+  - id: 9
+    name: other_landfill
+    stream: Trash
+    notes: "Contaminated or multi-material items: greasy pizza boxes, lined paper cups, chip bags."
+
+# ---------------------------------------------------------------------------
+# Decision thresholds. Applied to the stream confidence after averaging the
+# last `vote_window` frames. Set these from the VALIDATION split, never test.
+# null = not yet tuned; firmware should treat null as "always show ?".
+# Recycle is stricter: a wrong Recycle contaminates the stream; a wrong Trash
+# only loses one recyclable.
+# ---------------------------------------------------------------------------
+decision:
+  vote_window: 5
+  thresholds:
+    Recycle: null     # expect the highest, e.g. ~0.85-0.90 after tuning
+    Trash: null
+    Compost: null
+    Special: null     # consider low: any battery hint should block the lids
+  fallback_stream: Unknown
