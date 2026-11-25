@@ -1,6 +1,5 @@
 *.pdf
 *.png
-*.jpg
 *.jpeg
 *.gif
 *.bmp
@@ -12,6 +11,7 @@
 *.pdf
 *.docx
 
+.data/trashnet/
 .venv/
 .env
 .env.local

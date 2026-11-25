@@ -1,9 +1,89 @@
 item_id,description,material_class,resin_code,state_notes,session_date,notes
-0001,Kirkland water bottle 16oz,plastic_bottle_jug,1,whole,2026-10-20,
-0001,Kirkland water bottle 16oz,plastic_bottle_jug,1,whole+crushed,2026-10-20
-0002, Plastic bag, plastic_film, 6, whole, 2026-10-20
-0003, Firestick TV remote, battery_electronics, 8, whole+front,2026-10-20
-0003, Firestick TV remote, battery_electronics, 8, whole+back, 2026-10-20
-0004, Lamp TV remote, battery_electronics, 8, whole+front, 2026-10-20
-0004, Lamp TV remote, battery_electronics, 8, whole+back, 2026-10-20
-
+0001,Kirkland water bottle 16oz,plastic_bottle_jug,1,whole,2026-10-20,empty
+0002,Kirkland water bottle 16oz,plastic_bottle_jug,1,whole,2026-10-20,full
+0003,Kirkland water bottle 16oz,plastic_bottle_jug,1,whole+horizontal,2026-10-20,full
+0004,Kirkland water bottle 16oz,plastic_bottle_jug,1,whole+backlighting,2026-10-20,full
+0005,Kirkland water bottle 16oz,plastic_bottle_jug,1,whole+backlighting+hand,2026-10-20,full
+0006,Kirkland water bottle 16oz,plastic_bottle_jug,1,whole+backlighting,2026-10-20,upright label front
+0007,Paper,paper,4,whole,2026-10-25,whole
+0008,Paper,paper,4,whole,2026-10-25,some writing
+0009,Paper,paper,4,whole,2026-10-25,lots of writing
+0010,Paper,paper,4,crushed,2026-10-25,hand behind
+0011,Paper,paper,4,crushed,2026-10-25,hand on the side
+0012,Paper,paper,4,crumbled,2026-10-25,hand behind
+0013,Paper,paper,4,crumbled,2026-10-25,hand on the side
+0014,Paper,paper,4,torn,2026-10-25,hand behind
+0015,Paper,paper,4,torn,2026-10-25,hand on the side
+0016,Dog Toy squeaker,other_rigid_plastic,2,whole,2026-10-31,
+0017,Dog Toy squeaker,other_rigid_plastic,2,ripped,2026-10-31,
+0018,Dog Toy squeaker,other_rigid_plastic,2,angled,2026-10-31,
+0019,Dog Toy squeaker,other_rigid_plastic,2,top,2026-10-31,
+0020,Dog Toy squeaker,other_rigid_plastic,2,bottom,2026-10-31,
+0021,computer mouse,battery_electronics,8,top,2026-11-01,
+0022,computer mouse,battery_electronics,8,bottom,2026-11-01,
+0023,computer mouse,battery_electronics,8,left,2026-11-01,
+0024,computer mouse,battery_electronics,8,right,2026-11-01,
+0025,computer mouse,battery_electronics,8,back,2026-11-01,
+0026,computer mouse,battery_electronics,8,angled,2026-11-01,
+0027,computer mouse,battery_electronics,8,top,2026-11-01,hand over
+0028,computer mouse,battery_electronics,8,top,2026-11-01,close
+0029,computer mouse,battery_electronics,8,angled,2026-11-01,close
+0030,battery,battery_electronics,8,top,2026-11-01,
+0031,battery,battery_electronics,8,bottom,2026-11-01,
+0032,battery,battery_electronics,8,label_front,2026-11-01,
+0033,battery,battery_electronics,8,label_back,2026-11-01,
+0034,battery,battery_electronics,8,angled,2026-11-01,
+0035,battery,battery_electronics,8,label_back,2026-11-01,
+0036,battery,battery_electronics,8,label_back,2026-11-01,
+0037,doggy poop bag,plastic_film,2,label_front,2026-11-08,
+0038,doggy poop bag,plastic_film,2,label_front+angled,2026-11-08,
+0039,doggy poop bag,plastic_film,2,crumbled,2026-11-08,
+0040,doggy poop bag,plastic_film,2,crumbled+angled,2026-11-08,
+0041,doggy poop bag,plastic_film,2,torn,2026-11-08,
+0042,doggy poop bag,plastic_film,2,torn+angled,2026-11-08,
+0043,coke zero can,metal_can,0,whole+label_front,2026-11-08,
+0044,coke zero can,metal_can,0,whole+label_back,2026-11-08,
+0045,coke zero can,metal_can,0,whole+top,2026-11-08,
+0046,coke zero can,metal_can,0,whole+bottom,2026-11-08,
+0047,coke zero can,metal_can,0,whole+angled,2026-11-08,
+0048,coke zero can,metal_can,0,whole+angled,2026-11-08,
+0049,coke zero can,metal_can,0,whole+angled,2026-11-08,
+0050,coke zero can,metal_can,0,whole+top,2026-11-08,can open
+0051,coke zero can,metal_can,0,whole+angled,2026-11-08,can open
+0052,coke zero can,metal_can,0,whole+angled,2026-11-08,can open
+0053,coke zero can,metal_can,0,crushed+top,2026-11-08,
+0054,coke zero can,metal_can,0,crushed+bottom,2026-11-08,
+0055,coke zero can,metal_can,0,crushed+angled,2026-11-08,
+0056,coke zero can,metal_can,0,crushed+angled,2026-11-08,
+0057,coke zero can,metal_can,0,cap+top,2026-11-08,close
+0058,glass jar,glass,3,top,2026-11-14,top off
+0059,glass jar,glass,3,bottom,2026-11-14,top off
+0060,glass jar,glass,3,label_back,2026-11-14,top off
+0061,glass jar,glass,3,angled,2026-11-14,top off
+0062,glass jar,glass,3,top,2026-11-14,top on
+0063,glass jar,glass,3,angled,2026-11-14,top off
+0064,glass jar,glass,3,bottom,2026-11-14,top on
+0065,glass jar,glass,3,label_back,2026-11-14,top on
+0066,glass jar,glass,3,angled,2026-11-14,top on
+0067,glass jar,glass,3,angled,2026-11-14,top on
+0068,cardboard box,cardboard,5,top,2026-11-15,lid up
+0069,cardboard box,cardboard,5,top,2026-11-15,lid open and out
+0070,cardboard box,cardboard,5,angled,2026-11-15,lid up
+0071,cardboard box,cardboard,5,angled,2026-11-15,lid open and out
+0072,cardboard box,cardboard,5,bottom,2026-11-15,lid up
+0073,cardboard box,cardboard,5,bottom,2026-11-15,lid open and out
+0074,cardboard box,cardboard,5,label_front,2026-11-15,lid up
+0075,cardboard box,cardboard,5,label_front,2026-11-15,lid open and out
+0076,cardboard box,cardboard,5,torn+angled,2026-11-15,
+0077,cardboard box,cardboard,5,torn+angled,2026-11-15,
+0078,cardboard box,cardboard,5,torn+angled,2026-11-15,
+0079,tomato,food_organic,7,whole+angled,2026-11-22,
+0080,tomato,food_organic,7,whole+angled,2026-11-22,
+0081,tomato,food_organic,7,whole+angled,2026-11-22,
+0082,tomato,food_organic,7,whole+angled,2026-11-22,3
+0083,tomato,food_organic,7,whole+angled,2026-11-22,3
+0084,tomato,food_organic,7,whole+angled,2026-11-22,3
+0085,popcorn_bag,other_landfill,9,whole+top,2026-11-25,see popcorn inside
+0086,popcorn_bag,other_landfill,9,whole+angled,2026-11-25,see popcorn inside
+0087,popcorn_bag,other_landfill,9,whole+angled,2026-11-25,see popcorn inside
+0088,popcorn_bag,other_landfill,9,whole+angled,2026-11-25,see popcorn inside
