@@ -1,12 +1,15 @@
 # BinSight training config. Same pipeline as trashnet.yaml.
-# Point manifest at data/manifests/binsight.csv with columns
-# filepath,item_id,label. label is a rules.yaml class name.
-# item_id groups every frame of one physical item so the splitter
-# keeps them in a single split.
+# The training manifest is data/manifests/binsight.csv with columns
+# filepath,item_id,label. Rebuild it after adding items or frames:
+#   python src/make_manifest_binsight.py --config configs/binsight.yaml
+# item_log is the human label sheet. item_id groups every frame of one
+# capture so the splitter keeps them in a single split. label is a
+# rules.yaml class name.
 
 name: binsight
 image_root: data/binsight
 manifest: data/manifests/binsight.csv
+item_log: ../item_manifest.csv
 rules: ../rules.yaml
 
 image_size: 96
