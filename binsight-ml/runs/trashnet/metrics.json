@@ -1,0 +1,322 @@
+{
+  "run_name": "trashnet",
+  "smoke": false,
+  "config": "configs/trashnet.yaml",
+  "rules_version": "1.0",
+  "weights_kept": "phase2",
+  "classes": [
+    "metal_can",
+    "plastic_bottle_jug",
+    "glass",
+    "paper",
+    "cardboard",
+    "other_landfill"
+  ],
+  "split": {
+    "strategy": "grouped by item_id, stratified by label",
+    "seed": 42,
+    "fractions": {
+      "val": 0.15,
+      "test": 0.15
+    },
+    "counts": {
+      "train": 1769,
+      "val": 379,
+      "test": 379
+    },
+    "per_class_counts": {
+      "metal_can": {
+        "train": 286,
+        "val": 62,
+        "test": 62
+      },
+      "plastic_bottle_jug": {
+        "train": 338,
+        "val": 72,
+        "test": 72
+      },
+      "glass": {
+        "train": 351,
+        "val": 75,
+        "test": 75
+      },
+      "paper": {
+        "train": 416,
+        "val": 89,
+        "test": 89
+      },
+      "cardboard": {
+        "train": 283,
+        "val": 60,
+        "test": 60
+      },
+      "other_landfill": {
+        "train": 95,
+        "val": 21,
+        "test": 21
+      }
+    }
+  },
+  "class_weights": {
+    "metal_can": 1.030885780885781,
+    "plastic_bottle_jug": 0.8722879684418146,
+    "glass": 0.8399810066476733,
+    "paper": 0.7087339743589743,
+    "cardboard": 1.0418138987043581,
+    "other_landfill": 3.1035087719298247
+  },
+  "training": {
+    "phase1_epochs_ran": 5,
+    "phase1_val_loss": 0.7446265816688538,
+    "phase2_epochs_ran": 15,
+    "phase2_best_val_loss": 0.6714361310005188,
+    "phase2_history": {
+      "accuracy": [
+        0.763143002986908,
+        0.7738835215568542,
+        0.7829282283782959,
+        0.7846240997314453,
+        0.7976257801055908,
+        0.7931034564971924,
+        0.797060489654541,
+        0.8061051368713379,
+        0.8027133941650391,
+        0.8083662986755371,
+        0.8179762363433838,
+        0.8083662986755371,
+        0.8049745559692383,
+        0.84284907579422,
+        0.8411532044410706
+      ],
+      "loss": [
+        0.6283145546913147,
+        0.6193253993988037,
+        0.6117594242095947,
+        0.5797953009605408,
+        0.5717554092407227,
+        0.5457942485809326,
+        0.5468152165412903,
+        0.533341646194458,
+        0.5498476028442383,
+        0.5162537693977356,
+        0.49919915199279785,
+        0.5015430450439453,
+        0.4994061291217804,
+        0.4476160705089569,
+        0.4473743736743927
+      ],
+      "val_accuracy": [
+        0.7467018365859985,
+        0.751978874206543,
+        0.7387862801551819,
+        0.7414247989654541,
+        0.7493403553962708,
+        0.7546173930168152,
+        0.7414247989654541,
+        0.7414247989654541,
+        0.7467018365859985,
+        0.7598944306373596,
+        0.7546173930168152,
+        0.7361477613449097,
+        0.7493403553962708,
+        0.7598944306373596,
+        0.7414247989654541
+      ],
+      "val_loss": [
+        0.7209723591804504,
+        0.7288172841072083,
+        0.7289383411407471,
+        0.7358477115631104,
+        0.7274073958396912,
+        0.7098866701126099,
+        0.7165194153785706,
+        0.7291140556335449,
+        0.700263500213623,
+        0.6714361310005188,
+        0.6889132261276245,
+        0.7243542075157166,
+        0.6900944113731384,
+        0.6718769669532776,
+        0.7115349173545837
+      ]
+    }
+  },
+  "evaluation_notes": [
+    "TrashNet covers 6 of the 10 material classes. Through rules.yaml those classes only produce Recycle and Trash, so Compost and Special have recall 0 and stream macro-F1 includes those zeros. That gap is the reason to collect BinSight images.",
+    "TrashNet's plastic folder is mapped entirely to plastic_bottle_jug (Recycle). Bottles, rigid containers, and film are folded together. The Indianapolis rules would send film and most rigid containers to Trash.",
+    "TrashNet has no item ids, so item_id is the image path and the item-level split is a stratified random image split. Similar photos of one object can land in both train and test, which flatters this baseline."
+  ],
+  "material": {
+    "macro_f1": 0.7597411595094715,
+    "labels": [
+      "metal_can",
+      "plastic_bottle_jug",
+      "glass",
+      "paper",
+      "cardboard",
+      "other_landfill"
+    ],
+    "per_class": {
+      "metal_can": {
+        "precision": 0.6493506493506493,
+        "recall": 0.8064516129032258,
+        "f1": 0.7194244604316546,
+        "support": 62
+      },
+      "plastic_bottle_jug": {
+        "precision": 0.8064516129032258,
+        "recall": 0.6944444444444444,
+        "f1": 0.746268656716418,
+        "support": 72
+      },
+      "glass": {
+        "precision": 0.7567567567567568,
+        "recall": 0.7466666666666667,
+        "f1": 0.7516778523489932,
+        "support": 75
+      },
+      "paper": {
+        "precision": 0.8846153846153846,
+        "recall": 0.7752808988764045,
+        "f1": 0.8263473053892216,
+        "support": 89
+      },
+      "cardboard": {
+        "precision": 0.855072463768116,
+        "recall": 0.9833333333333333,
+        "f1": 0.9147286821705427,
+        "support": 60
+      },
+      "other_landfill": {
+        "precision": 0.631578947368421,
+        "recall": 0.5714285714285714,
+        "f1": 0.6,
+        "support": 21
+      }
+    },
+    "confusion_matrix": [
+      [
+        50,
+        2,
+        7,
+        2,
+        1,
+        0
+      ],
+      [
+        8,
+        50,
+        8,
+        5,
+        0,
+        1
+      ],
+      [
+        11,
+        7,
+        56,
+        1,
+        0,
+        0
+      ],
+      [
+        6,
+        1,
+        2,
+        69,
+        6,
+        5
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        59,
+        1
+      ],
+      [
+        2,
+        2,
+        1,
+        1,
+        3,
+        12
+      ]
+    ]
+  },
+  "stream": {
+    "macro_f1": 0.39442896935933147,
+    "labels": [
+      "Recycle",
+      "Trash",
+      "Compost",
+      "Special"
+    ],
+    "per_stream": {
+      "Recycle": {
+        "precision": 0.975,
+        "recall": 0.9804469273743017,
+        "f1": 0.9777158774373259,
+        "support": 358
+      },
+      "Trash": {
+        "precision": 0.631578947368421,
+        "recall": 0.5714285714285714,
+        "f1": 0.6,
+        "support": 21
+      },
+      "Compost": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 0
+      },
+      "Special": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 0
+      }
+    },
+    "confusion_matrix": [
+      [
+        351,
+        7,
+        0,
+        0
+      ],
+      [
+        9,
+        12,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "zero_support": [
+      "Compost",
+      "Special"
+    ],
+    "zero_division": 0
+  },
+  "material_to_stream": {
+    "metal_can": "Recycle",
+    "plastic_bottle_jug": "Recycle",
+    "glass": "Recycle",
+    "paper": "Recycle",
+    "cardboard": "Recycle",
+    "other_landfill": "Trash"
+  }
+}

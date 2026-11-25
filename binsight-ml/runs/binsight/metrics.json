@@ -1,0 +1,457 @@
+{
+  "run_name": "binsight",
+  "smoke": false,
+  "config": "configs/binsight.yaml",
+  "rules_version": "1.0",
+  "weights_kept": "phase2",
+  "classes": [
+    "metal_can",
+    "plastic_bottle_jug",
+    "other_rigid_plastic",
+    "glass",
+    "paper",
+    "cardboard",
+    "plastic_film",
+    "food_organic",
+    "battery_electronics",
+    "other_landfill"
+  ],
+  "split": {
+    "strategy": "grouped by item_id, stratified by label",
+    "seed": 42,
+    "fractions": {
+      "val": 0.15,
+      "test": 0.15
+    },
+    "counts": {
+      "train": 300,
+      "val": 70,
+      "test": 70
+    },
+    "per_class_counts": {
+      "metal_can": {
+        "train": 55,
+        "val": 10,
+        "test": 10
+      },
+      "plastic_bottle_jug": {
+        "train": 20,
+        "val": 5,
+        "test": 5
+      },
+      "other_rigid_plastic": {
+        "train": 15,
+        "val": 5,
+        "test": 5
+      },
+      "glass": {
+        "train": 30,
+        "val": 10,
+        "test": 10
+      },
+      "paper": {
+        "train": 35,
+        "val": 5,
+        "test": 5
+      },
+      "cardboard": {
+        "train": 35,
+        "val": 10,
+        "test": 10
+      },
+      "plastic_film": {
+        "train": 20,
+        "val": 5,
+        "test": 5
+      },
+      "food_organic": {
+        "train": 20,
+        "val": 5,
+        "test": 5
+      },
+      "battery_electronics": {
+        "train": 60,
+        "val": 10,
+        "test": 10
+      },
+      "other_landfill": {
+        "train": 10,
+        "val": 5,
+        "test": 5
+      }
+    }
+  },
+  "class_weights": {
+    "metal_can": 0.5454545454545454,
+    "plastic_bottle_jug": 1.5,
+    "other_rigid_plastic": 2.0,
+    "glass": 1.0,
+    "paper": 0.8571428571428571,
+    "cardboard": 0.8571428571428571,
+    "plastic_film": 1.5,
+    "food_organic": 1.5,
+    "battery_electronics": 0.5,
+    "other_landfill": 3.0
+  },
+  "training": {
+    "phase1_epochs_ran": 5,
+    "phase1_val_loss": 0.523714542388916,
+    "phase2_epochs_ran": 17,
+    "phase2_best_val_loss": 0.30761876702308655,
+    "phase2_history": {
+      "accuracy": [
+        0.9800000190734863,
+        0.9733333587646484,
+        0.9766666889190674,
+        0.9833333492279053,
+        0.9766666889190674,
+        0.9933333396911621,
+        0.9900000095367432,
+        0.9933333396911621,
+        0.9933333396911621,
+        1.0,
+        0.996666669845581,
+        0.996666669845581,
+        0.9800000190734863,
+        0.996666669845581,
+        0.996666669845581,
+        1.0,
+        0.996666669845581
+      ],
+      "loss": [
+        0.12206549197435379,
+        0.10246887803077698,
+        0.08973915129899979,
+        0.06683890521526337,
+        0.0631871372461319,
+        0.04810195788741112,
+        0.04725800082087517,
+        0.042215555906295776,
+        0.03572608903050423,
+        0.03304346278309822,
+        0.03101520799100399,
+        0.02898547798395157,
+        0.0391923189163208,
+        0.026445282623171806,
+        0.021247562021017075,
+        0.021699054166674614,
+        0.01756078563630581
+      ],
+      "val_accuracy": [
+        0.8142856955528259,
+        0.8428571224212646,
+        0.8571428656578064,
+        0.8714285492897034,
+        0.8571428656578064,
+        0.8571428656578064,
+        0.8571428656578064,
+        0.8428571224212646,
+        0.8428571224212646,
+        0.8428571224212646,
+        0.8428571224212646,
+        0.8857142925262451,
+        0.8857142925262451,
+        0.8571428656578064,
+        0.8571428656578064,
+        0.8571428656578064,
+        0.8428571224212646
+      ],
+      "val_loss": [
+        0.48981747031211853,
+        0.43258365988731384,
+        0.4012959599494934,
+        0.3985002636909485,
+        0.39175108075141907,
+        0.3796018958091736,
+        0.3642692565917969,
+        0.35566461086273193,
+        0.3495699167251587,
+        0.33705902099609375,
+        0.3205033540725708,
+        0.30761876702308655,
+        0.3183756172657013,
+        0.3321499824523926,
+        0.33325114846229553,
+        0.3263642489910126,
+        0.3286049962043762
+      ]
+    }
+  },
+  "evaluation_notes": [
+    "Splits are by item_id. Every frame of an item stays in one split."
+  ],
+  "material": {
+    "macro_f1": 0.7142760180995474,
+    "labels": [
+      "metal_can",
+      "plastic_bottle_jug",
+      "other_rigid_plastic",
+      "glass",
+      "paper",
+      "cardboard",
+      "plastic_film",
+      "food_organic",
+      "battery_electronics",
+      "other_landfill"
+    ],
+    "per_class": {
+      "metal_can": {
+        "precision": 1.0,
+        "recall": 0.6,
+        "f1": 0.7499999999999999,
+        "support": 10
+      },
+      "plastic_bottle_jug": {
+        "precision": 0.625,
+        "recall": 1.0,
+        "f1": 0.7692307692307693,
+        "support": 5
+      },
+      "other_rigid_plastic": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666,
+        "support": 5
+      },
+      "glass": {
+        "precision": 1.0,
+        "recall": 0.7,
+        "f1": 0.8235294117647058,
+        "support": 10
+      },
+      "paper": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 5
+      },
+      "cardboard": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 10
+      },
+      "plastic_film": {
+        "precision": 1.0,
+        "recall": 0.2,
+        "f1": 0.33333333333333337,
+        "support": 5
+      },
+      "food_organic": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 5
+      },
+      "battery_electronics": {
+        "precision": 0.6666666666666666,
+        "recall": 1.0,
+        "f1": 0.8,
+        "support": 10
+      },
+      "other_landfill": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 5
+      }
+    },
+    "confusion_matrix": [
+      [
+        6,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        4,
+        0
+      ],
+      [
+        0,
+        5,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        5,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        7,
+        3,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        5,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        10,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        5,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        10,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        5
+      ]
+    ]
+  },
+  "stream": {
+    "macro_f1": 0.8368788142981691,
+    "labels": [
+      "Recycle",
+      "Trash",
+      "Compost",
+      "Special"
+    ],
+    "per_stream": {
+      "Recycle": {
+        "precision": 0.9117647058823529,
+        "recall": 0.775,
+        "f1": 0.8378378378378379,
+        "support": 40
+      },
+      "Trash": {
+        "precision": 0.6875,
+        "recall": 0.7333333333333333,
+        "f1": 0.7096774193548386,
+        "support": 15
+      },
+      "Compost": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 5
+      },
+      "Special": {
+        "precision": 0.6666666666666666,
+        "recall": 1.0,
+        "f1": 0.8,
+        "support": 10
+      }
+    },
+    "confusion_matrix": [
+      [
+        31,
+        5,
+        0,
+        4
+      ],
+      [
+        3,
+        11,
+        0,
+        1
+      ],
+      [
+        0,
+        0,
+        5,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        10
+      ]
+    ],
+    "zero_support": [],
+    "zero_division": 0
+  },
+  "material_to_stream": {
+    "metal_can": "Recycle",
+    "plastic_bottle_jug": "Recycle",
+    "other_rigid_plastic": "Trash",
+    "glass": "Recycle",
+    "paper": "Recycle",
+    "cardboard": "Recycle",
+    "plastic_film": "Trash",
+    "food_organic": "Compost",
+    "battery_electronics": "Special",
+    "other_landfill": "Trash"
+  }
+}
