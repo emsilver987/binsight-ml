@@ -10,17 +10,23 @@
  *   item 0001   set the current item ID (creates /item0001/ on the card)
  *   cap         capture one burst of FRAMES_PER_BURST frames for the current item
  *   sort        classify the item in front of the camera and print the decision
+ *   auto        keep classifying and send each decision to the Uno
+ *   stop        pause that automatic classify loop
  *   undo        delete the last burst you captured
  *   ls          list the files for the current item
  *   status      show current item, next burst number, free space
  *   help        show this list
  *
+ * Uno link: D6 (TX) to Uno pin 0 (RX), grounds tied. 115200.
+ * Each decision is also one line on D6: SORT <code> <material> <conf> <display> <frames> <ms>
+ * Re-upload this sketch before watching the Uno. The previous firmware never transmitted.
+ *
  * Open this folder in the Arduino IDE, not arduino/XAIO_ESP32S3.ino.
  * The IDE compiles every .ino in a folder as one sketch.
  *
  * Board: XIAO_ESP32S3. Tools -> PSRAM -> OPI PSRAM.
- * Library: TFLiteMicro_ArduinoESP32S3 (Sketch -> Include Library -> Add .ZIP).
- *   https://github.com/j-siderius/TFLiteMicro_ArduinoESP32S3/releases/latest
+ * TensorFlow Lite Micro comes with the ESP32 board package. Do not install
+ * a separate TFLite library; an older one conflicts with this core.
  *
  * Regenerate the model headers after retraining, from binsight-ml/:
  *   .venv/bin/python src/export_tflite.py --config configs/binsight.yaml --run runs/binsight
@@ -36,7 +42,9 @@
 #include "SPI.h"
 #include <esp_heap_caps.h>
 
-#include "TFLiteMicro_ArduinoESP32S3.h"
+#include "tensorflow/lite/micro/micro_interpreter.h"
+#include "tensorflow/lite/micro/micro_mutable_op_resolver.h"
+#include "tensorflow/lite/schema/schema_generated.h"
 #include "binsight_model.h"
 #include "binsight_labels.h"
 
@@ -49,6 +57,9 @@ const int WARMUP_FRAMES = 4;        // discarded before each burst (see captureB
 const int JPEG_QUALITY = 10;        // 0-63, lower = better quality, bigger files
 const int SD_CS_PIN = 21;           // XIAO Sense microSD chip select
 const size_t kArenaBytes = 1024 * 1024;  // PSRAM working memory for the int8 model
+const int LINK_RX_PIN = 44;         // D7. Leave it unconnected; Uno TX is 5 V.
+const int LINK_TX_PIN = 43;         // D6 -> Uno pin 0 (RX)
+const uint32_t AUTO_GAP_MS = 3000;  // pause between automatic sorts
 
 // ---------------------------------------------------------------------------
 // XIAO ESP32-S3 Sense camera pins, hardcoded.
@@ -83,6 +94,8 @@ int lastBurst = -1;        // burst number most recently captured (for undo)
 String lineBuf = "";       // accumulates serial characters until newline
 bool sdReady = false;
 bool modelReady = false;
+bool autoSort = true;          // headless: the Uno is the only serial monitor
+uint32_t lastSortMs = 0;
 tflite::MicroInterpreter *interpreter = nullptr;
 TfLiteTensor *inputTensor = nullptr;
 TfLiteTensor *outputTensor = nullptr;
@@ -323,22 +336,29 @@ void sortItem() {
 
   float confidence = streamScores[stream];
   bool accept = confidence + 0.000001f >= kStreamThresholds[stream];
+  char code = accept ? kStreamCodes[stream] : kUnknownCode;
+  const char *streamName = accept ? kStreamNames[stream] : "Unknown";
+  const char *display = accept ? kStreamDisplays[stream] : kUnknownDisplay;
+  unsigned long msPerFrame = (unsigned long)(inferMs / used);
+
   Serial.println("--- sort ---");
   Serial.printf("material: %s\n", kClassNames[material]);
+  Serial.printf("stream: %s\n", streamName);
   if (accept) {
-    Serial.printf("stream: %s\n", kStreamNames[stream]);
     Serial.printf("confidence: %.3f\n", confidence);
-    Serial.printf("code: %c\n", kStreamCodes[stream]);
-    Serial.printf("display: %s\n", kStreamDisplays[stream]);
   } else {
-    Serial.println("stream: Unknown");
     Serial.printf("confidence: %.3f  below %s %.2f\n",
                   confidence, kStreamNames[stream], kStreamThresholds[stream]);
-    Serial.printf("code: %c\n", kUnknownCode);
-    Serial.printf("display: %s\n", kUnknownDisplay);
   }
+  Serial.printf("code: %c\n", code);
+  Serial.printf("display: %s\n", display);
   Serial.printf("frames: %d\n", used);
-  Serial.printf("ms/frame: %lu\n", (unsigned long)(inferMs / used));
+  Serial.printf("ms/frame: %lu\n", msPerFrame);
+
+  // Same decision, one line, out D6 to the Uno.
+  Serial1.printf("SORT %c %s %.3f %s %d %lu\n",
+                 code, kClassNames[material], confidence, display, used, msPerFrame);
+  lastSortMs = millis();
 }
 
 // ---------------------------------------------------------------------------
@@ -516,7 +536,7 @@ void printStatus() {
 }
 
 void printHelp() {
-  Serial.println("Commands: item <4 digits> | cap | sort | undo | ls | status | help");
+  Serial.println("Commands: item <4 digits> | cap | sort | auto | stop | undo | ls | status | help");
 }
 
 void handleCommand(String line) {
@@ -526,7 +546,13 @@ void handleCommand(String line) {
   if (line.startsWith("item ")) setItem(line.substring(5));
   else if (line == "cap") captureBurst();
   else if (line == "sort") sortItem();
-  else if (line == "undo") undoBurst();
+  else if (line == "auto") {
+    autoSort = true;
+    Serial.println("Auto-sort on. Decisions go out D6 to the Uno.");
+  } else if (line == "stop") {
+    autoSort = false;
+    Serial.println("Auto-sort paused. Type `sort` or `auto`.");
+  } else if (line == "undo") undoBurst();
   else if (line == "ls") listItem();
   else if (line == "status") printStatus();
   else if (line == "help") printHelp();
@@ -538,22 +564,26 @@ void handleCommand(String line) {
 // ---------------------------------------------------------------------------
 void setup() {
   Serial.begin(115200);
+  Serial1.begin(115200, SERIAL_8N1, LINK_RX_PIN, LINK_TX_PIN);
   delay(2000);  // native USB: give the Serial Monitor time to reconnect after reset
   Serial.println("\n=== BinSight classify ===");
 
   if (!psramFound()) {
     Serial.println("FATAL: no PSRAM. Set Tools -> PSRAM -> OPI PSRAM and re-upload.");
+    Serial1.println("ERR psram");
     return;
   }
   Serial.printf("PSRAM: %u KB\n", (unsigned)(ESP.getPsramSize() / 1024));
 
   if (!initModel()) {
     Serial.println("FATAL: model init failed.");
+    Serial1.println("ERR model");
     return;
   }
 
   if (!initCamera()) {
     Serial.println("FATAL: camera init failed. Check the camera board is seated.");
+    Serial1.println("ERR camera");
     return;
   }
   Serial.println("Camera: OK (QVGA JPEG)");
@@ -567,12 +597,14 @@ void setup() {
   }
 
   printHelp();
+  Serial.println("Uno link on D6. Auto-sort is on (`stop` pauses it).");
+  Serial1.println("READY");
+  lastSortMs = millis();
 }
 
 void loop() {
   // Non-blocking line reader: collect characters until a newline, then act.
-  // Reading this way (rather than Serial.readStringUntil) never stalls loop(),
-  // which matters later when the board also has to listen to the Uno.
+  // Reading this way (rather than Serial.readStringUntil) never stalls loop().
   while (Serial.available()) {
     char c = Serial.read();
     if (c == '\n' || c == '\r') {
@@ -583,5 +615,12 @@ void loop() {
     } else if (lineBuf.length() < 64) {
       lineBuf += c;
     }
+  }
+
+  // With the USB cable on the Uno, nobody can type `sort`. Classify on a timer
+  // and let the Uno print it. `stop` pauses this while you use the XIAO monitor.
+  if (autoSort && modelReady && lineBuf.length() == 0 &&
+      (uint32_t)(millis() - lastSortMs) >= AUTO_GAP_MS) {
+    sortItem();
   }
 }
