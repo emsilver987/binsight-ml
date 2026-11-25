@@ -1,0 +1,245 @@
+{
+  "split": "val",
+  "vote_window": 5,
+  "n_items": 14,
+  "n_frames": 70,
+  "thresholds": {
+    "Recycle": 0.83,
+    "Trash": 0.79,
+    "Compost": 0.82,
+    "Special": 0.65
+  },
+  "trace": [
+    "Recycle: 0.83 keeps 7 confident votes, rejects 0 wrong; left below the bar: 0.520",
+    "Trash: 0.79 keeps all 3 correct votes, rejects 0 wrong, ceiling 0.83",
+    "Compost: 0.82 keeps all 1 correct votes, rejects 0 wrong, ceiling 0.83",
+    "Special: 0.65 keeps all 2 correct votes, rejects 0 wrong, ceiling 1.00",
+    "no validation Special item would have opened a lid"
+  ],
+  "items": [
+    {
+      "item_id": "0001",
+      "label": "plastic_bottle_jug",
+      "true_stream": "Recycle",
+      "pred_stream": "Recycle",
+      "confidence": 0.9988,
+      "decision": "Recycle",
+      "correct": true,
+      "stream_probs": {
+        "Recycle": 0.9988,
+        "Trash": 0.0009,
+        "Compost": 0.0,
+        "Special": 0.0003
+      },
+      "n_frames": 5
+    },
+    {
+      "item_id": "0014",
+      "label": "paper",
+      "true_stream": "Recycle",
+      "pred_stream": "Recycle",
+      "confidence": 0.9976,
+      "decision": "Recycle",
+      "correct": true,
+      "stream_probs": {
+        "Recycle": 0.9976,
+        "Trash": 0.0024,
+        "Compost": 0.0,
+        "Special": 0.0
+      },
+      "n_frames": 5
+    },
+    {
+      "item_id": "0020",
+      "label": "other_rigid_plastic",
+      "true_stream": "Trash",
+      "pred_stream": "Trash",
+      "confidence": 0.9957,
+      "decision": "Trash",
+      "correct": true,
+      "stream_probs": {
+        "Recycle": 0.0035,
+        "Trash": 0.9957,
+        "Compost": 0.0,
+        "Special": 0.0008
+      },
+      "n_frames": 5
+    },
+    {
+      "item_id": "0026",
+      "label": "battery_electronics",
+      "true_stream": "Special",
+      "pred_stream": "Special",
+      "confidence": 0.6566,
+      "decision": "Special",
+      "correct": true,
+      "stream_probs": {
+        "Recycle": 0.3044,
+        "Trash": 0.0288,
+        "Compost": 0.0102,
+        "Special": 0.6566
+      },
+      "n_frames": 5
+    },
+    {
+      "item_id": "0027",
+      "label": "battery_electronics",
+      "true_stream": "Special",
+      "pred_stream": "Special",
+      "confidence": 0.8734,
+      "decision": "Special",
+      "correct": true,
+      "stream_probs": {
+        "Recycle": 0.0964,
+        "Trash": 0.0242,
+        "Compost": 0.0061,
+        "Special": 0.8734
+      },
+      "n_frames": 5
+    },
+    {
+      "item_id": "0040",
+      "label": "plastic_film",
+      "true_stream": "Trash",
+      "pred_stream": "Trash",
+      "confidence": 0.795,
+      "decision": "Trash",
+      "correct": true,
+      "stream_probs": {
+        "Recycle": 0.1748,
+        "Trash": 0.795,
+        "Compost": 0.0017,
+        "Special": 0.0285
+      },
+      "n_frames": 5
+    },
+    {
+      "item_id": "0045",
+      "label": "metal_can",
+      "true_stream": "Recycle",
+      "pred_stream": "Recycle",
+      "confidence": 0.836,
+      "decision": "Recycle",
+      "correct": true,
+      "stream_probs": {
+        "Recycle": 0.836,
+        "Trash": 0.002,
+        "Compost": 0.0025,
+        "Special": 0.1595
+      },
+      "n_frames": 5
+    },
+    {
+      "item_id": "0049",
+      "label": "metal_can",
+      "true_stream": "Recycle",
+      "pred_stream": "Recycle",
+      "confidence": 0.887,
+      "decision": "Recycle",
+      "correct": true,
+      "stream_probs": {
+        "Recycle": 0.887,
+        "Trash": 0.0247,
+        "Compost": 0.0228,
+        "Special": 0.0655
+      },
+      "n_frames": 5
+    },
+    {
+      "item_id": "0064",
+      "label": "glass",
+      "true_stream": "Recycle",
+      "pred_stream": "Recycle",
+      "confidence": 0.9602,
+      "decision": "Recycle",
+      "correct": true,
+      "stream_probs": {
+        "Recycle": 0.9602,
+        "Trash": 0.0393,
+        "Compost": 0.0001,
+        "Special": 0.0004
+      },
+      "n_frames": 5
+    },
+    {
+      "item_id": "0066",
+      "label": "glass",
+      "true_stream": "Recycle",
+      "pred_stream": "Recycle",
+      "confidence": 0.9974,
+      "decision": "Recycle",
+      "correct": true,
+      "stream_probs": {
+        "Recycle": 0.9974,
+        "Trash": 0.0017,
+        "Compost": 0.0001,
+        "Special": 0.0008
+      },
+      "n_frames": 5
+    },
+    {
+      "item_id": "0075",
+      "label": "cardboard",
+      "true_stream": "Recycle",
+      "pred_stream": "Recycle",
+      "confidence": 0.996,
+      "decision": "Recycle",
+      "correct": true,
+      "stream_probs": {
+        "Recycle": 0.996,
+        "Trash": 0.0006,
+        "Compost": 0.002,
+        "Special": 0.0014
+      },
+      "n_frames": 5
+    },
+    {
+      "item_id": "0077",
+      "label": "cardboard",
+      "true_stream": "Recycle",
+      "pred_stream": "Recycle",
+      "confidence": 0.5198,
+      "decision": "Unknown",
+      "correct": false,
+      "stream_probs": {
+        "Recycle": 0.5198,
+        "Trash": 0.4601,
+        "Compost": 0.0063,
+        "Special": 0.0137
+      },
+      "n_frames": 5
+    },
+    {
+      "item_id": "0080",
+      "label": "food_organic",
+      "true_stream": "Compost",
+      "pred_stream": "Compost",
+      "confidence": 0.8295,
+      "decision": "Compost",
+      "correct": true,
+      "stream_probs": {
+        "Recycle": 0.0134,
+        "Trash": 0.0041,
+        "Compost": 0.8295,
+        "Special": 0.153
+      },
+      "n_frames": 5
+    },
+    {
+      "item_id": "0085",
+      "label": "other_landfill",
+      "true_stream": "Trash",
+      "pred_stream": "Trash",
+      "confidence": 0.8244,
+      "decision": "Trash",
+      "correct": true,
+      "stream_probs": {
+        "Recycle": 0.1642,
+        "Trash": 0.8244,
+        "Compost": 0.0008,
+        "Special": 0.0106
+      },
+      "n_frames": 5
+    }
+  ]
+}
