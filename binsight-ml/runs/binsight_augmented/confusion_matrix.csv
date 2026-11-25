@@ -1,0 +1,11 @@
+true\pred,metal_can,plastic_bottle_jug,other_rigid_plastic,glass,paper,cardboard,plastic_film,food_organic,battery_electronics,other_landfill
+metal_can,48,1,3,6,1,0,0,0,5,3
+plastic_bottle_jug,3,33,4,6,2,1,0,0,0,2
+other_rigid_plastic,3,1,25,1,2,0,0,0,0,0
+glass,21,2,6,55,1,0,0,0,0,0
+paper,2,0,4,1,70,12,0,0,2,11
+cardboard,0,0,1,0,2,67,0,0,0,0
+plastic_film,1,0,0,0,0,0,7,0,0,1
+food_organic,0,0,0,0,0,0,0,6,0,0
+battery_electronics,0,0,0,0,0,0,0,0,10,0
+other_landfill,3,2,0,1,2,2,1,0,0,9

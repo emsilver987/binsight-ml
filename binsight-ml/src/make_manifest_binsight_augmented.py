@@ -1,7 +1,8 @@
 """Build a BinSight manifest that also includes every TrashNet image.
 
-BinSight frames keep their material_class. TrashNet folders are relabeled
-with trashnet_label_map onto those same class names. Images are not copied.
+BinSight frames keep their material_class. TrashNet folders use
+trashnet_label_map, then trashnet_label_overrides relabels the photos
+that do not match that folder default. Images are not copied.
 filepath is relative to image_root, which must be a parent of both datasets,
 so train.py can keep doing image_root / filepath.
 
@@ -23,6 +24,8 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+import csv
+
 from src.make_manifest_binsight import build_rows as build_binsight_rows
 from src.make_manifest_binsight import read_item_log, scan_captures
 from src.make_manifest_trashnet import build_rows as build_trashnet_rows
@@ -36,6 +39,49 @@ def _under(root: Path, child: Path) -> str:
         return child.resolve().relative_to(root.resolve()).as_posix()
     except ValueError as exc:
         raise ValueError(f"{child} is not inside image_root {root}") from exc
+
+
+def read_overrides(path: Path, class_names: set[str]) -> dict[str, str]:
+    """filepath relative to the TrashNet root -> BinSight class.
+
+    The folder map is the default. This file is only the images whose
+    BinSight class is not the folder default.
+    """
+    if not path.is_file():
+        raise FileNotFoundError(f"TrashNet label overrides not found: {path}")
+    overrides = {}
+    with path.open(newline="") as handle:
+        reader = csv.DictReader(handle)
+        fields = set(reader.fieldnames or [])
+        missing = [column for column in ("filepath", "label") if column not in fields]
+        if missing:
+            raise ValueError(f"{path} is missing columns: {missing}")
+        for line_number, row in enumerate(reader, start=2):
+            filepath = (row.get("filepath") or "").strip()
+            label = (row.get("label") or "").strip()
+            if not filepath or not label:
+                raise ValueError(f"{path}:{line_number} has an empty field")
+            if label not in class_names:
+                raise ValueError(f"{path}:{line_number} label {label!r} is not a BinSight class")
+            if filepath in overrides:
+                raise ValueError(f"{path}:{line_number} repeats {filepath}")
+            overrides[filepath] = label
+    return overrides
+
+
+def apply_overrides(rows: list[dict], overrides: dict[str, str]) -> int:
+    by_path = {row["filepath"]: row for row in rows}
+    missing = sorted(set(overrides) - set(by_path))
+    if missing:
+        raise ValueError("override paths are not in TrashNet: " + ", ".join(missing[:8]))
+    changed = 0
+    for filepath, label in overrides.items():
+        row = by_path[filepath]
+        if row["label"] == label:
+            raise ValueError(f"{filepath} override is already the folder label {label}")
+        row["label"] = label
+        changed += 1
+    return changed
 
 
 def retarget(rows: list[dict], image_root: Path, source_root: Path, source: str) -> list[dict]:
@@ -84,6 +130,8 @@ def main() -> None:
         set(class_names),
     )
     trashnet_rows = build_trashnet_rows(trashnet_root, label_map)
+    overrides = read_overrides(resolve(config["trashnet_label_overrides"]), set(class_names))
+    n_overrides = apply_overrides(trashnet_rows, overrides)
     rows = retarget(binsight_rows, image_root, binsight_root, "binsight")
     rows.extend(retarget(trashnet_rows, image_root, trashnet_root, "trashnet"))
 
@@ -108,15 +156,15 @@ def main() -> None:
         item_ids_by_label[source][row["label"]].add(row["item_id"])
 
     print(f"wrote {len(rows)} frames to {resolve(config['manifest'])}")
+    print(f"relabeled {n_overrides} TrashNet images off their folder default")
     print(f"image root: {image_root}")
     print("material class -> stream -> binsight items/frames + trashnet images")
-    reachable = set(label_map.values())
     for name in class_names:
         stream = rules["name_to_stream"][name]
         binsight_items = len(item_ids_by_label["binsight"][name])
         binsight_frames = frame_counts["binsight"][name]
         trashnet_images = frame_counts["trashnet"][name]
-        marker = "" if name in reachable else "  (BinSight only)"
+        marker = "" if trashnet_images else "  (BinSight only)"
         print(
             f"  {name:22} {stream:10} "
             f"binsight {binsight_items:4d} items {binsight_frames:4d} frames  "

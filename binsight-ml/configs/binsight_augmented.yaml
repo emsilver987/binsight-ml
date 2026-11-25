@@ -21,8 +21,9 @@ seed: 42
 val_fraction: 0.15
 test_fraction: 0.15
 
-# Full BinSight taxonomy, in rules.yaml id order. TrashNet only fills six
-# of these. The other four stay BinSight-only, so those classes stay small.
+# Full BinSight taxonomy, in rules.yaml id order. battery_electronics
+# has no TrashNet images. The other classes get TrashNet only where the
+# photo actually matches that class.
 classes:
   - metal_can
   - plastic_bottle_jug
@@ -35,10 +36,15 @@ classes:
   - battery_electronics
   - other_landfill
 
-# TrashNet folder -> BinSight class. Same mapping as configs/trashnet.yaml.
-# plastic mixes bottles, tubs, and some film; all of it is plastic_bottle_jug.
-# trash is other_landfill. Nothing in TrashNet is other_rigid_plastic,
-# plastic_film, food_organic, or battery_electronics.
+# TrashNet folder -> BinSight class, for images that match the folder.
+# plastic's default is plastic_bottle_jug because most of that folder is
+# narrow-neck bottles and jugs. Cups, tubs, clamshells, lids, loose caps,
+# film, and oil jugs are listed in trashnet_label_overrides instead.
+# trash's default is other_landfill. Clear bags, food scraps, styrofoam,
+# and rigid cups in that folder are overrides.
+# cardboard, glass, and paper match those BinSight classes.
+# metal is metal_can. Crumpled foil, wire, and scrap that is not a can
+# are overrides to other_landfill. Can tops, jar lids, and foil trays stay cans.
 trashnet_label_map:
   cardboard: cardboard
   glass: glass
@@ -46,6 +52,8 @@ trashnet_label_map:
   paper: paper
   plastic: plastic_bottle_jug
   trash: other_landfill
+
+trashnet_label_overrides: data/manifests/trashnet_label_overrides.csv
 
 model:
   alpha: 0.35
@@ -70,6 +78,6 @@ augment:
 
 evaluation_notes:
   - "Every TrashNet image is included. Paths stay in the original folders; image_root is data/ so filepath can reach both trees."
-  - "TrashNet cardboard, glass, metal, paper, plastic, and trash map to cardboard, glass, metal_can, paper, plastic_bottle_jug, and other_landfill. The other four BinSight classes have BinSight frames only."
-  - "plastic_bottle_jug is heavy because the whole TrashNet plastic folder lands there. other_rigid_plastic, plastic_film, food_organic, and battery_electronics stay at BinSight counts. train.py class weights rebalance the loss."
+  - "TrashNet cardboard, glass, paper, and cans map to those BinSight classes. Plastic bottles stay plastic_bottle_jug. Clamshells, cups, tubs, lids, and loose caps are other_rigid_plastic. Bags and bubble mailers are plastic_film. Chip bags, foil, and oil jugs are other_landfill. Food scraps in the trash folder are food_organic."
+  - "other_rigid_plastic, plastic_film, and food_organic get some TrashNet images. battery_electronics stays BinSight-only. train.py class weights rebalance the loss."
   - "Splits are still by item_id. A BinSight capture stays together. Each TrashNet image is its own item, so those images scatter across train, val, and test."
